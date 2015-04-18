@@ -3,7 +3,16 @@
 Template Name: Transcriber
 */
 ?>
+<style>
+.sidebar-wrap {
+display:none;
 
+}
+#comments {
+display: none;
+
+}
+</style>
 <h2>Transcriber Widget</h2>
 <h4>The Plan</h4>
 <ul class="list-group">
