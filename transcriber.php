@@ -4,9 +4,14 @@ Template Name: Transcriber
 */
 ?>
 <style>
-#plan-title {
+#plan-title:hover {
 	text-decoration: underline;
+	cursor: pointer;
 
+}
+
+#plan {
+	//display:none;
 }
 
 #kestrel-row .col-md-1:hover {
@@ -58,20 +63,34 @@ Template Name: Transcriber
 </style>
 <script>
   jQuery(document).ready(function($) {
+    var data = [
+                [71.283, -156.790, "6EF569"],
+                [71.273, -156.761, "FE75F9"],
+                [71.253, -156.810, "6E5F69"],
+                [71.223, -156.851, "BEF5F2"]
+            ];
+  
     var url = "/wp-content/uploads/2015/04/kestrel.jpg";
     $("#kestrel-row .col-md-1").each(function(i, v) {
 
       $(v).html('<img class="kestrel-image" src="'+url+'"/><div>d ' + (i + 1) + '</div>');
+      $(v).attr("data-kestrel-geo",'{\"lat\":'
+        					+data[0][0]
+      						+',\"lon\":'
+      						+data[0][1]
+      						+',\"color\":\"'
+      						+data[0][2]
+      						+'\"}');
+      
       $(v).click(function(e) {
         $("#input-widget").hide();
-        $(".kestrel-image").css({
+   /*      $(".kestrel-image").css({
           "display" : "inline"
-        });
-        $(this).find("img").css({
-          "display" : "none"
-        });
+        }); */
+        $(this).find("img").parent().html("&nbsp;");
         $("#input-widget-image").html('<img class="kestrel-image" src="'+url+'"/><div>d ' + (i + 1) + '</div>');
         $("#input-widget").show();
+        
 
       });
     })
@@ -82,13 +101,15 @@ Template Name: Transcriber
       $("#input-widget").hide();
 
     });
+    $("#kestrel-form").submit(function(){return false;});
     
-    $("plan-title").click(function(){ $("#plan").toggle(); });
+    $("plan-title").click(function(){ $("#plan").toggle(); alert('cl');});
   
   });
 </script>
 <h2>Transcriber Widget</h2>
 <h4 id="plan-title">The Plan</h4>
+
 <ul id="plan" class="list-group">
 	<li class="list-group-item">Display kestrel photos waiting to be transcribed in a grid</li>
 	<li class="list-group-item">Click on photo--> input page for that photo</li>
@@ -114,7 +135,7 @@ Template Name: Transcriber
 </div>
 <div id="input-widget">
 	<div id="input-widget-image"></div>
-	<form action="" class="form-horizontal" style="width: 80%">
+	<form id="kestrel-form" action="" class="form-horizontal" style="width: 80%">
 		<div class="form-group">
 			<div class="col-md-4 field-label">
 				<label for="id_reference">Wind Direction</label>
