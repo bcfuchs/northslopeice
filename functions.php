@@ -6,7 +6,7 @@ function theme_enqueue_styles() {
     wp_enqueue_style( 'parent-style', get_template_directory_uri() . '/rtl.css' );
 
 }
-
+// use tags to make the functional bits in pages
 add_shortcode ( 'add_map_widget', 'add_map_widget' );
 function add_map_widget() {
 return get_template_part('map');
