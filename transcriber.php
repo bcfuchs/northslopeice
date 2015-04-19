@@ -4,6 +4,11 @@ Template Name: Transcriber
 */
 ?>
 <style>
+
+#plans {
+display: none;
+
+}
 #plan-title:hover {
 	text-decoration: underline;
 	cursor: pointer;
@@ -43,7 +48,7 @@ Template Name: Transcriber
 	background: gray;
 	color: white;
 	top: 70px;
-	left: 900px;
+	left: 600px;
 	z-index: 99999;
 	height: 380px;
 	width: 230px;
@@ -72,7 +77,7 @@ Template Name: Transcriber
   
     var url = "/wp-content/uploads/2015/04/kestrel.jpg";
     $("#kestrel-row .col-md-1").each(function(i, v) {
-
+      var url = "/wp-content/uploads/2015/04/kestrel"+(i+1)+".jpg";
       $(v).html('<img class="kestrel-image" src="'+url+'"/><div>d ' + (i + 1) + '</div>');
       $(v).attr("data-kestrel-geo",'{\"lat\":'
         					+data[0][0]
@@ -87,6 +92,8 @@ Template Name: Transcriber
    /*      $(".kestrel-image").css({
           "display" : "inline"
         }); */
+        var geo = JSON.parse($(this).attr("data-kestrel-geo"));
+        console.log(geo.lat);
         $(this).find("img").parent().html("&nbsp;");
         $("#input-widget-image").html('<img class="kestrel-image" src="'+url+'"/><div>d ' + (i + 1) + '</div>');
         $("#input-widget").show();
@@ -108,6 +115,7 @@ Template Name: Transcriber
   });
 </script>
 <h2>Transcriber Widget</h2>
+<div id="plans">
 <h4 id="plan-title">The Plan</h4>
 
 <ul id="plan" class="list-group">
@@ -116,6 +124,7 @@ Template Name: Transcriber
 	<li class="list-group-item">Save the data and remove kestrel from grid.</li>
 	<li class="list-group-item">Mock up example below...</li>
 </ul>
+</div>
 <div class="container" id="kcont">
 	<h3>Click on an image to edit it!</h3>
 	<div id="kestrel-row" class="row">
