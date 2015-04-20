@@ -3,6 +3,7 @@
 Template Name: Transcriber
 */
 ?>
+ <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
 <script src="<?php echo get_stylesheet_directory_uri(); ?>/js/exif.js"></script>
 <style>
 #plans {
@@ -70,7 +71,9 @@ Template Name: Transcriber
 <?php get_currentuserinfo();
 		global $current_user;?>
 
-
+		
+	
+	
 	
 var trans_user_login =	"<?php echo $current_user->user_login;?>";
 var trans_user_firstname =	"<?php echo $current_user->user_firstname;?>
@@ -78,9 +81,24 @@ var trans_user_firstname =	"<?php echo $current_user->user_firstname;?>
 
   jQuery(document).ready(
       function($) {
-
+			
         var data = [ [ 71.283, -156.790, "6EF569" ], [ 71.273, -156.761, "FE75F9" ], [ 71.253, -156.810, "6E5F69" ],
             [ 71.223, -156.851, "BEF5F2" ] ];
+        
+        var post_kestrel_data = function(success,error) {
+      		
+    		data = $("#kestrel-form").serialize();
+    		console.log("posting data...");
+    	    var ajaxurl = "/wp-admin/admin-ajax.php"
+    			
+    			$.ajax({
+    			    url:ajaxurl, 
+    			    data:data, 
+    			    success:success,
+    				error: error,
+    			});
+        };
+     
 
         var get_latlon = function(id,cb) {
          console.log(id);
@@ -101,11 +119,13 @@ var trans_user_firstname =	"<?php echo $current_user->user_firstname;?>
 	    var set_latlon_info = function(id) {
 		      
 		    
-	          var addLatLon = function(lat,lon) {
+	       var addLatLon = function(lat,lon) {
 	          console.log(typeof(lat));
 	          /// TODO get the negative from the orientation 
 	          var str = lat[0] + "'"+ lat[1] + "\""+lat[2] + ", -" + lon[0] + "'"+ lon[1] + "'"+lon[2];
 	          $("#input-widget-info").html(str);
+	          $("#kestrel-form-lat").val(lat[0] + "'"+ lat[1] + "\""+lat[2]);
+	          $("#kestrel-form-lon").val(lon[0] + "'"+ lon[1] + "\""+lon[2]);
 	          console.log(str);
 	        }
 	       
@@ -134,6 +154,7 @@ var trans_user_firstname =	"<?php echo $current_user->user_firstname;?>
                     
                     $(this).find("img").hide();
                     set_latlon_info(id);
+                    $("#kestrel-form-img").attr('value', $(this).find("img").attr('src'));
                     $("#input-widget-image").html(
                         '<img class="kestrel-image" src="' + url + '"/>');
                    
@@ -143,8 +164,33 @@ var trans_user_firstname =	"<?php echo $current_user->user_firstname;?>
             });
 
         $("#submit").click(function(e) {
-          alert("do something with this data");
-          $("#input-widget").hide();
+          
+          
+          var success = function(response) {
+  					alert("Thanks! Your data has been saved!");
+  					console.log(response);
+  					$("#input-widget").hide();
+  					$("#total-kestrels-tr").html(
+  						parseInt($("#total-kestrels-tr").html())+1
+  					);
+  					$("#you-kestrels-tr").html(
+    						parseInt($("#you-kestrels-tr").html())+1
+    					);
+  					
+  					$("#you-kestrels-tr").effect( "pulsate", {times:3}, 3000 );
+  					$("#total-kestrels-tr").effect( "pulsate", {times:3}, 3000 );
+  				
+          
+          };
+          var error = function(e) {
+  				  var msg = ": ";
+  				  if (! navigator.onLine) {
+  				    msg = msg + "You appear to be offline..."
+  				    
+  				  }
+  				  alert(e.statusText+" " + msg);
+  				};
+          post_kestrel_data(success,error);
 
         });
         $("#kestrel-form").submit(function() {
@@ -159,20 +205,8 @@ var trans_user_firstname =	"<?php echo $current_user->user_firstname;?>
       });
 </script>
 <h2>Transcriber</h2>
-<h4>
-	Hi,
-	<?php echo $current_user->user_firstname;?>
-	!
-</h4>
-<div id="plans">
-	<h4 id="plan-title">The Plan</h4>
-	<ul id="plan" class="list-group">
-		<li class="list-group-item">Display kestrel photos waiting to be transcribed in a grid</li>
-		<li class="list-group-item">Click on photo--> input page for that photo</li>
-		<li class="list-group-item">Save the data and remove kestrel from grid.</li>
-		<li class="list-group-item">Mock up example below...</li>
-	</ul>
-</div>
+<?php get_template_part('widget_user');?>
+
 <div class="container" id="kcont">
 	<h3>Click on an image to transcribe it!</h3>
 	<div id="kestrel-row" class="row">
