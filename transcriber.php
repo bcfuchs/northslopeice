@@ -3,9 +3,19 @@
 Template Name: Transcriber
 */
 ?>
- <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
 <script src="<?php echo get_stylesheet_directory_uri(); ?>/js/exif.js"></script>
+<script src="<?php echo get_stylesheet_directory_uri(); ?>/js/geopoint.js"></script>
 <style>
+/*  override theme settings...*/
+.content-left-wrap {
+	padding-top: 0 !important;
+}
+
+header.entry-header {
+	display: none;
+}
+
 #plans {
 	display: none;
 }
@@ -13,6 +23,11 @@ Template Name: Transcriber
 #plan-title:hover {
 	text-decoration: underline;
 	cursor: pointer;
+}
+
+#map-canvas {
+	height: 300px !important;
+	width: 300px !important;
 }
 
 #plan { //
@@ -40,7 +55,7 @@ Template Name: Transcriber
 }
 
 #kcont {
-	margin-top: 200px;
+	margin-top: 150px;
 }
 
 #input-widget {
@@ -49,7 +64,7 @@ Template Name: Transcriber
 	background: gray;
 	color: white;
 	top: 70px;
-	left: 600px;
+	left: 780px;
 	z-index: 99999;
 	height: 380px;
 	width: 230px;
@@ -122,8 +137,12 @@ var trans_user_firstname =	"<?php echo $current_user->user_firstname;?>
 	       var addLatLon = function(lat,lon) {
 	          console.log(typeof(lat));
 	          /// TODO get the negative from the orientation 
-	          var str = lat[0] + "'"+ lat[1] + "\""+lat[2] + ", -" + lon[0] + "'"+ lon[1] + "'"+lon[2];
-	          $("#input-widget-info").html(str);
+	          
+	          var str = lat[0] + "° "+ lat[1] + "'"+lat[2] + "\","+ " -"+ lon[0] + "° "+ lon[1] + "' "+lon[2]+"\" ";
+	          var geo =  new GeoPoint(lat[0] + "° "+ lat[1] + "' "+lat[2] + "\"", "-"+ lon[0] + "° "+ lon[1] + "' "+lon[2]+"\" ");
+	          console.log(geo.getLatDec());
+	          console.log(lon[0] + "° "+ lon[1] + "' "+lon[2]+"\" ");
+	          $("#input-widget-info").html(geo.getLatDec().toFixed(3) + "," + geo.getLonDec().toFixed(3));
 	          $("#kestrel-form-lat").val(lat[0] + "'"+ lat[1] + "\""+lat[2]);
 	          $("#kestrel-form-lon").val(lon[0] + "'"+ lon[1] + "\""+lon[2]);
 	          console.log(str);
@@ -159,6 +178,7 @@ var trans_user_firstname =	"<?php echo $current_user->user_firstname;?>
                         '<img class="kestrel-image" src="' + url + '"/>');
                    
                     $("#input-widget").show();
+                    // show the map
 
                   });
             });
@@ -204,24 +224,47 @@ var trans_user_firstname =	"<?php echo $current_user->user_firstname;?>
 
       });
 </script>
-<h2>Transcriber</h2>
-<?php get_template_part('widget_user');?>
-
-<div class="container" id="kcont">
-	<h3>Click on an image to transcribe it!</h3>
-	<div id="kestrel-row" class="row">
-		<div class="col-md-1"></div>
-		<div class="col-md-1"></div>
-		<div class="col-md-1"></div>
-		<div class="col-md-1"></div>
-		<div class="col-md-1"></div>
-		<div class="col-md-1"></div>
-		<div class="col-md-1"></div>
-		<div class="col-md-1"></div>
-		<div class="col-md-1"></div>
-		<div class="col-md-1"></div>
-		<div class="col-md-1"></div>
-		<div class="col-md-1"></div>
+<h3>Click on an image to transcribe it!</h3>
+<div class="container">
+	<div class="row">
+		<div class="col-md-4 panel transcribe-left">
+			<?php get_template_part('widget_user');?>
+		</div>
+		<div class="col-md-8 panel transcribe-right">
+			<div id="map-container-1" style="display: none">
+				<?php get_template_part('widget_map')?>
+				<script>
+				jQuery(document).ready(function($){
+				  var data = [
+				              [71.283, -156.790, "6EF569"],
+				              [71.273, -156.761, "FE75F9"],
+				              [71.253, -156.810, "6E5F69"],
+				              [71.223, -156.851, "BEF5F2"]
+				          ];
+					
+				    window.ait.makeMap(data);
+				});
+				
+				
+				</script>
+			</div>
+		</div>
 	</div>
-</div>
-<?php get_template_part('widget_transcriber');?>
+	</div>
+	<div class="container" id="kcont">
+		<div id="kestrel-row" class="row">
+			<div class="col-md-1"></div>
+			<div class="col-md-1"></div>
+			<div class="col-md-1"></div>
+			<div class="col-md-1"></div>
+			<div class="col-md-1"></div>
+			<div class="col-md-1"></div>
+			<div class="col-md-1"></div>
+			<div class="col-md-1"></div>
+			<div class="col-md-1"></div>
+			<div class="col-md-1"></div>
+			<div class="col-md-1"></div>
+			<div class="col-md-1"></div>
+		</div>
+	</div>
+	<?php get_template_part('widget_transcriber');?>
