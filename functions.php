@@ -80,4 +80,45 @@ function save_kestrel_data() {
 
 	wp_die(); // this is required to terminate immediately and return a proper response
 }
+
+/**
+ * Add transcribe checkbox field
+* http://code.tutsplus.com/articles/creating-custom-fields-for-attachments-in-wordpress--net-13076
+ */
+
+function be_attachment_kestrel_transcribe( $form_fields, $post ) {
+	$checked = "";
+	// set to checked if value ==1 
+	if (get_post_meta( $post->ID, 'be_kestrel_transcribe', true )) 
+		$checked = "checked";
+	$form_fields['be_kestrel_transcribe'] = array(
+			'label' => '<span style="color:red;" id="transcribe-invite">Transcribe this kestral</span>',
+			'input' => 'html',
+			'value' => get_post_meta( $post->ID, 'be_kestrel_transcribe', true ),
+			'helps' => 'check if you want this kestrel to be transcribed',
+			'html'=>"<input type='checkbox' value='1' $checked
+    		name='attachments[{$post->ID}][be_kestrel_transcribe]'
+    		id='attachments[{$post->ID}]' />"
+	);
+
+
+	return $form_fields;
+}
+	
+add_filter( 'attachment_fields_to_edit', 'be_attachment_kestrel_transcribe', 10, 2 );
+
+/**
+ * Save transcribe checkbx. 
+*/
+
+function be_attachment_kestrel_transcribe_save($post, $attachment ) {
+
+	if( isset( $attachment['be_kestrel_transcribe'] ) )
+		
+		update_post_meta( $post['ID'], 'be_kestrel_transcribe', $attachment['be_kestrel_transcribe'] );
+	
+	return $post;
+}
+
+add_filter( 'attachment_fields_to_save', 'be_attachment_kestrel_transcribe_save', 10, 2 );
 ?>

@@ -49,7 +49,7 @@ jQuery(document).ready(function($){
               [71.223, -156.851, "BEF5F2"]
           ];
   var mapProp = {
-      center : new google.maps.LatLng(71.285044, -156.7818778),
+      center : new google.maps.LatLng(71.275044, -155.2818778),
       zoom : 10,
       mapTypeId : google.maps.MapTypeId.ROADMAP
     };

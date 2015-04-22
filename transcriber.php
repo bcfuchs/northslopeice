@@ -124,8 +124,8 @@ var trans_user_firstname =	"<?php echo $current_user->user_firstname;?>
              		console.log(img);
               		lat = EXIF.getTag(img, "GPSLatitude");
               		lon = EXIF.getTag(img, "GPSLongitude");
-              		console.log(lat);
-              		console.log(lon);
+              		console.log("lat = " + lat);
+              		console.log("lon = "+ lon);
               		cb(lat,lon);
             	});
            
@@ -136,16 +136,27 @@ var trans_user_firstname =	"<?php echo $current_user->user_firstname;?>
 		    
 	       var addLatLon = function(lat,lon) {
 	          console.log(typeof(lat));
+	          console.log("alat = " + lat);
+        		console.log("a	lon = "+ lon);
+        		
 	          /// TODO get the negative from the orientation 
 	          
 	          var str = lat[0] + "° "+ lat[1] + "'"+lat[2] + "\","+ " -"+ lon[0] + "° "+ lon[1] + "' "+lon[2]+"\" ";
-	          var geo =  new GeoPoint(lat[0] + "° "+ lat[1] + "' "+lat[2] + "\"", "-"+ lon[0] + "° "+ lon[1] + "' "+lon[2]+"\" ");
+	          var geo =  new GeoPoint("-" + lon[0] + "° "+ lon[1] + "' "+lon[2] + "\"", lat[0] + "° "+ lat[1] + "' "+lat[2]+"\" ");
 	          console.log(geo.getLatDec());
 	          console.log(lon[0] + "° "+ lon[1] + "' "+lon[2]+"\" ");
 	          $("#input-widget-info").html(geo.getLatDec().toFixed(3) + "," + geo.getLonDec().toFixed(3));
 	          $("#kestrel-form-lat").val(lat[0] + "'"+ lat[1] + "\""+lat[2]);
 	          $("#kestrel-form-lon").val(lon[0] + "'"+ lon[1] + "\""+lon[2]);
 	          console.log(str);
+	          var data = [
+	       //               [ 71.283, -156.990, "FE75F9" ]
+	                      [geo.getLatDec(), geo.getLonDec(), "6EF569"]
+	                     
+	                  ];
+	         	var e = $.Event('makeMap');
+		        $(document).trigger(e,{update:data});
+	       
 	        }
 	       
 	        get_latlon(id,addLatLon);
@@ -241,8 +252,12 @@ var trans_user_firstname =	"<?php echo $current_user->user_firstname;?>
 				              [71.253, -156.810, "6E5F69"],
 				              [71.223, -156.851, "BEF5F2"]
 				          ];
-					
-				    window.ait.makeMap(data);
+				  var props = {
+				      center : new google.maps.LatLng(71.778044, -156.289),
+				      zoom : 7,
+				      mapTypeId : google.maps.MapTypeId.ROADMAP
+				    };
+				    window.ait.makeMap(data,props);
 				});
 				
 				
