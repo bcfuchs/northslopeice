@@ -167,9 +167,23 @@ var trans_user_firstname =	"<?php echo $current_user->user_firstname;?>
 	      
 	    };
         var url = "/wp-content/uploads/2015/04/kestrel.jpg";
+        var images = [];
+        <?php
+global $wpdb;
+$query = 'select guid  from wp_posts inner join wp_postmeta on wp_posts.id=wp_postmeta.post_id where wp_postmeta.meta_key="be_kestrel_transcribe" and wp_postmeta.meta_value=1';
+$res = $wpdb->get_results($query);
+
+foreach ($res as $img) {
+	
+	echo "images.push(\"".$img->guid."\");\n";
+
+}
+?>
+
         $("#kestrel-row .col-md-1").each(
             function(i, v) {
-              var url = "/wp-content/uploads/2015/04/kestrel" + (i + 1) + ".jpg";
+           //   var url = "/wp-content/uploads/2015/04/kestrel" + (i + 1) + ".jpg";
+              var url = images.pop();
               var id = "kestrel" + (i + 1) + "_sel";
 
               $(v).html('<img id="' + id + '" class="kestrel-image" src="' + url + '"/><div>d ' + (i + 1) + '</div>');
@@ -247,10 +261,10 @@ var trans_user_firstname =	"<?php echo $current_user->user_firstname;?>
 				<script>
 				jQuery(document).ready(function($){
 				  var data = [
-				              [71.283, -156.790, "6EF569"],
-				              [71.273, -156.761, "FE75F9"],
-				              [71.253, -156.810, "6E5F69"],
-				              [71.223, -156.851, "BEF5F2"]
+				//              [71.283, -156.790, "6EF569"],
+				//              [71.273, -156.761, "FE75F9"],
+				//              [71.253, -156.810, "6E5F69"],
+				//              [71.223, -156.851, "BEF5F2"]
 				          ];
 				  var props = {
 				      center : new google.maps.LatLng(71.778044, -156.289),

@@ -84,6 +84,11 @@ function save_kestrel_data() {
 /**
  * Add transcribe checkbox field
 * http://code.tutsplus.com/articles/creating-custom-fields-for-attachments-in-wordpress--net-13076
+* 
+* To get the urls do a join between postmeta and posts;
+* select guid from wp_posts inner join wp_postmeta on wp_posts.id=wp_postmeta.post_id 
+* 	where wp_postmeta.meta_key="be_kestrel_transcribe" and wp_postmeta.meta_value=1;
+*  
  */
 
 function be_attachment_kestrel_transcribe( $form_fields, $post ) {
