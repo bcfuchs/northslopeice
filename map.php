@@ -35,8 +35,9 @@ display: none;
  // width: 100%;
 }
 </style>
+<?php get_template_part('widget_translist');?>
 <div id="map-header" style="display:inline">
-<h2 style="display:inline">Data Points</h2>
+<h2 style="display:inline">Data Points...</h2>
 <button id="adddata" class="btn btn-primary" style="display:inline;">Update data</button>
 </div>
 <?php get_template_part('widget_map'); ?>

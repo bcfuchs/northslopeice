@@ -107,6 +107,7 @@ var trans_user_firstname =	"<?php echo $current_user->user_firstname;?>
     	    var ajaxurl = "/wp-admin/admin-ajax.php"
     			
     			$.ajax({
+    			  	type: $("#kestrel-form").attr('method'),
     			    url:ajaxurl, 
     			    data:data, 
     			    success:success,

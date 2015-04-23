@@ -10,9 +10,19 @@ function add_map_widget() {
 	return get_template_part ( 'map' );
 }
 
-add_shortcode ( 'transcriber', 'add_transcriber_widget' );
-function add_transcriber_widget() {
+add_shortcode ( 'transcriber', 'add_transcriber_page' );
+function add_transcriber_page() {
 	return get_template_part ( 'transcriber' );
+}
+
+add_shortcode ( 'kestrel_page', 'add_kestrel_page' );
+function add_kestrel_page() {
+	return get_template_part ( 'kestrel_page' );
+}
+
+add_shortcode ( 'kestrel_list', 'add_translist_widget' );
+function add_translist_widget() {
+	return get_template_part ( 'widget_translist' );
 }
 
 add_shortcode('test_kestrel','test_kestrel_table');
@@ -67,16 +77,19 @@ function kestrel_insert_reading($wd,$ws,$temp,$lat,$lon,$img) {
 add_action( 'wp_ajax_save_kestrel_data', 'save_kestrel_data' );
 
 function save_kestrel_data() {
-	global $wpdb; // this is how you get access to the database
+	error_log('save_kestrel_data');
+	error_log(serialize($_POST));
+	error_log(serialize($_GET));
 	$lat = $_POST['lat'];
 	$lon = $_POST['lon'];
 	$img = $_POST['img'];
 	$temp = $_POST['temp'];
 	$wd = $_POST['wind_direction'];
 	$ws = $_POST['wind_speed'];
+	error_log($img);
 	// TODO exception --fail!
 	kestrel_insert_reading($wd,$ws,$temp,$lat,$lon,$img);
-	echo serialize($_POST);
+	
 
 	wp_die(); // this is required to terminate immediately and return a proper response
 }
