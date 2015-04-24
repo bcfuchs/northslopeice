@@ -96,7 +96,7 @@ var trans_user_firstname =	"<?php echo $current_user->user_firstname;?>
 
   jQuery(document).ready(
       function($) {
-			
+        var make_kestrel_data_uri;	
         var data = [ [ 71.283, -156.790, "6EF569" ], [ 71.273, -156.761, "FE75F9" ], [ 71.253, -156.810, "6E5F69" ],
             [ 71.223, -156.851, "BEF5F2" ] ];
         
@@ -147,8 +147,8 @@ var trans_user_firstname =	"<?php echo $current_user->user_firstname;?>
 	          console.log(geo.getLatDec());
 	          console.log(lon[0] + "° "+ lon[1] + "' "+lon[2]+"\" ");
 	          $("#input-widget-info").html(geo.getLatDec().toFixed(3) + "," + geo.getLonDec().toFixed(3));
-	          $("#kestrel-form-lat").val(lat[0] + "'"+ lat[1] + "\""+lat[2]);
-	          $("#kestrel-form-lon").val(lon[0] + "'"+ lon[1] + "\""+lon[2]);
+	          $("#kestrel-form-lat").val(lat[0] + "° "+ lat[1] +  "' "+lat[2]+"\" ");
+	          $("#kestrel-form-lon").val(lon[0] + "° "+ lon[1] + "' "+lon[2]+"\" ");
 	          console.log(str);
 	          var data = [
 	       //               [ 71.283, -156.990, "FE75F9" ]
@@ -215,6 +215,7 @@ foreach ($res as $img) {
           var success = function(response) {
   					alert("Thanks! Your data has been saved!");
   					console.log(response);
+  					make_kestrel_data_uri();
   					$("#input-widget").hide();
   					$("#total-kestrels-tr").html(
   						parseInt($("#total-kestrels-tr").html())+1
@@ -247,6 +248,40 @@ foreach ($res as $img) {
           $("#plan").toggle();
           alert('cl');
         });
+
+var make_kestrel_anchor = function() {
+  
+  $("#site-navigation ul").append('<li><a id="kestrel_data_uri" download="kestrel_data64.txt"' 
+  
+  	+'>Get the Data!</a></li>');
+  
+}
+make_kestrel_data_uri = function(){
+var data2 = {
+			'action': 'download_data'
+			
+		};
+		
+		
+	  console.log("testing ajax");
+	  $.ajax({url:"/wp-admin/admin-ajax.php",
+	    	  data: data2,
+	    	  type:"POST",
+	    	  success: function(r){
+	    	      
+	    	  	var d =    btoa(r);
+	    	 
+	    	 $("#kestrel_data_uri").attr('href', 'data:application/json;charset=utf8;base64,'
+	    	   + d);  
+	    	   
+	    	  	
+	    	  },
+	    	  error: function(e){console.log("error")}
+	    	  });
+}
+make_kestrel_anchor();
+make_kestrel_data_uri();
+
 
       });
 </script>

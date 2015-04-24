@@ -139,4 +139,27 @@ function be_attachment_kestrel_transcribe_save($post, $attachment ) {
 }
 
 add_filter( 'attachment_fields_to_save', 'be_attachment_kestrel_transcribe_save', 10, 2 );
+
+add_filter( 'template_include', 'my_custom_page_template', 99 );
+function my_custom_page_template( $template ) {
+	
+	if ( is_page( 'blabla' )  ) {
+		return "hi";
+	}
+
+	return $template;
+}
+add_action( 'wp_ajax_download_data', 'download_data' );
+
+function download_data() {
+	error_log('download_data');
+	global $wpdb;
+	$results = $wpdb->get_results( 'SELECT * FROM wp_kestrel_readings', OBJECT );
+	$out = array();
+	foreach ($results as $r) {
+		$out[] = $r;
+	}
+	echo stripslashes(json_encode($out));
+	wp_die();
+}
 ?>
