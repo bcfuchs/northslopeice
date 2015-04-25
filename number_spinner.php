@@ -45,21 +45,21 @@
 <script>
   (function($) {
     $(document).ready(function() {
-      $('.spinner .btn:first-of-type').on('click', function() {
-        $('.spinner input').val(parseInt($('.spinner input').val(), 10) + 1);
+      $('#<?php echo $number_spinner_id ?>-spinner.spinner .btn:first-of-type').on('click', function() {
+        $('#<?php echo $number_spinner_id ?>-spinner.spinner input').val(parseInt($('#<?php echo $number_spinner_id ?>-spinner.spinner input').val(), 10) + 1);
       });
-      $('.spinner .btn:last-of-type').on('click', function() {
-        $('.spinner input').val(parseInt($('.spinner input').val(), 10) - 1);
+      $('#<?php echo $number_spinner_id ?>-spinner.spinner .btn:last-of-type').on('click', function() {
+        $('#<?php echo $number_spinner_id ?>-spinner.spinner input').val(parseInt($('#<?php echo $number_spinner_id ?>-spinner.spinner input').val(), 10) - 1);
       });
     });
   })(jQuery);
 </script>
 <div class="form-group">
 	<div class="col-md-4 field-label">
-		<label for="wind_speed">$number_spinner_label</label>
+		<label for="wind_speed"><?php echo $number_spinner_label ?></label>
 	</div>
 	<div class="col-md-4">
-		<div class="input-group spinner">
+		<div id="<?php echo $number_spinner_id ?>-spinner" class="input-group spinner">
 			<input type="text" name="<?php echo $number_spinner_id ?>" id="<?php echo $number_spinner_id ?>" class="form-control" value="<?php echo $number_spinner_default_value?>">
 			<div class="input-group-btn-vertical">
 				<button class="btn btn-default">
