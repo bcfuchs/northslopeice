@@ -66,7 +66,7 @@ header.entry-header {
 	top: 70px;
 	left: 780px;
 	z-index: 99999;
-	height: 380px;
+	height: 480px;
 	width: 230px;
 	display: none;
 	border: 2px solid blue;
@@ -103,7 +103,9 @@ var trans_user_firstname =	"<?php echo $current_user->user_firstname;?>
         var post_kestrel_data = function(success,error) {
       		
     		data = $("#kestrel-form").serialize();
+    		
     		console.log("posting data...");
+    		console.log(data);
     	    var ajaxurl = "/wp-admin/admin-ajax.php"
     			
     			$.ajax({

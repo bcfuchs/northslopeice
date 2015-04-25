@@ -54,8 +54,8 @@ $out = <<<END
 <td  class="kestrel-image"><img src="$img->image"/></td>
 <td class="kestrel-location">$lat, $lon</td>
 <td class="kestrel-wd">$img->wind_direction</td>
-<td class="kestrel-ws">$img->wind_</td>
-<td class="kestrel-temp">$img->temp</td>
+<td class="kestrel-ws">$img->wind_speed</td>
+<td class="kestrel-temp">$img->temperature</td>
 </tr>
 END;
 echo $out;
