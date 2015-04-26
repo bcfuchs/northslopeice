@@ -14,8 +14,8 @@ called from transcriber.php js
 			<input id="kestrel-form-img" type="hidden" name="img" /> 
 			<input id="kestrel-action" type="hidden" name="action"
 				value="save_kestrel_data" /> 
-				<input id="kestrel-form-lat" type="hidden" name="lat" /> 
-				<input id="kestrel-form-lon"	type="hidden" name="lon" /> 
+			<input id="kestrel-form-lat" type="hidden" name="lat" /> 
+			<input id="kestrel-form-lon"	type="hidden" name="lon" /> 
 				 
 			
 
@@ -48,7 +48,7 @@ called from transcriber.php js
 		
 		
 		<?php do_action('k_get_spinner', "Wind Speed", "wind_speed",2); ?>
-		<?php do_action('k_get_spinner', "temp", "Temp",-2); ?>		
+		<?php do_action('k_get_spinner', "Temp", "temp",-2); ?>		
 	<div id="submit-group" class="form-group">
 		<div class="col-md-4">
 			<button id="submit" name="submit" class="btn btn-primary">Submit</button>

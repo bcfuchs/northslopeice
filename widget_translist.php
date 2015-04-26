@@ -19,14 +19,16 @@ width: 100px;
 $query = 'select guid  from wp_posts inner join wp_postmeta on wp_posts.id=wp_postmeta.post_id where wp_postmeta.meta_key="be_kestrel_transcribe" and wp_postmeta.meta_value=1';
 $res = $wpdb->get_results($query);
 
-* To get the readings: 
+* To get the readings for $imageurl: 
 
 select * from wp_kestrel_readings where image=$imageurl;
+
+
 * 
 * Better way to do this:
 * 1. get all the available kestrels
 * 2. List all the transciptions for that kestrel
-* 3. Put in list-groups inside a list-group
+* 3. Put in list-items inside a list-group
 *  
 */
 ?>
@@ -49,8 +51,7 @@ $lat = stripslashes($img->lat);
 $lon = stripslashes($img->lon);
 $out = <<<END
 
-<tr>
-
+<tr>`
 <td  class="kestrel-image"><img src="$img->image"/></td>
 <td class="kestrel-location">$lat, $lon</td>
 <td class="kestrel-wd">$img->wind_direction</td>

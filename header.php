@@ -15,6 +15,14 @@
  */
 
 ?>
+<?php
+// Require login for site
+get_currentuserinfo();
+global $user_ID;
+if ($user_ID == '') { 
+	header('Location: /wp-login.php'); exit(); 
+}
+?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
 <head>
@@ -57,7 +65,9 @@
 		
 	endif;	
 
-endif; ?>
+endif; 
+
+?>
 	<header id="home" class="header">
 		<div id="main-nav" class="navbar navbar-inverse bs-docs-nav" role="banner">
 			<div class="container">

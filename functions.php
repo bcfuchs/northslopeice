@@ -164,6 +164,6 @@ function k_get_spinner($label, $id, $v) {
 		set_query_var( 'number_spinner_default_value',$v);
 		get_template_part('number_spinner');
 }
-
-
+// redirect to home page
+add_filter( 'login_redirect', create_function( '$url,$query,$user', 'return home_url();' ), 10, 3 );
 ?>
