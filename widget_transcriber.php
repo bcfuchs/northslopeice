@@ -10,6 +10,7 @@ called from transcriber.php js
 	<div id="input-widget-info"></div>
 	<div id="input-widget-form">
 		<form id="kestrel-form" action="" class="form-horizontal" style="width: 80%" method="POST">
+<!--  set from calling template via js -->
 			<input id="kestrel-form-img" type="hidden" name="img" /> 
 			<input id="kestrel-action" type="hidden" name="action"
 				value="save_kestrel_data" /> 
@@ -45,18 +46,10 @@ called from transcriber.php js
 			</div>
 		
 		
-		 <?php 
-		set_query_var( 'number_spinner_label',"Wind Speed");
-		set_query_var( 'number_spinner_id',"wind_speed");
-		set_query_var( 'number_spinner_default_value',3);
-		get_template_part('number_spinner'); ?>
-		 <?php 
-		set_query_var( 'number_spinner_id',"temp");
-		set_query_var( 'number_spinner_label',"Temp");
-		set_query_var( 'number_spinner_default_value',-2);
-		get_template_part('number_spinner'); ?>
+		
+		<?php do_action('k_get_spinner', "Wind Speed", "wind_speed",2); ?>
+		<?php do_action('k_get_spinner', "temp", "Temp",-2); ?>		
 	<div id="submit-group" class="form-group">
-	
 		<div class="col-md-4">
 			<button id="submit" name="submit" class="btn btn-primary">Submit</button>
 		</div>

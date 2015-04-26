@@ -82,7 +82,9 @@ header.entry-header {
 	display: none;
 }
 </style>
+
 <script>
+
 <?php get_currentuserinfo();
 		global $current_user;?>
 
@@ -207,7 +209,7 @@ foreach ($res as $img) {
                    
                     $("#input-widget").show();
                     // show the map
-
+				
                   });
             });
 

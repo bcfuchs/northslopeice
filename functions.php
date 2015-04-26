@@ -154,4 +154,16 @@ function download_data() {
 	echo stripslashes(json_encode($out));
 	wp_die();
 }
+
+add_action('k_get_spinner','k_get_spinner',10,3);
+function k_get_spinner($label, $id, $v) {
+		error_log($label);
+		error_log($id);
+		set_query_var( 'number_spinner_label',$label);
+		set_query_var( 'number_spinner_id',$id);
+		set_query_var( 'number_spinner_default_value',$v);
+		get_template_part('number_spinner');
+}
+
+
 ?>

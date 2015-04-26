@@ -1,11 +1,17 @@
 
 <style>
 .spinner {
-	width: 100px;
+	width: 50px;
+	
 }
 
 .spinner input {
 	text-align: right;
+	 width: 30px;
+  	 float: right;
+  	 border-bottom-left-radius: 4px;
+  	 border-top-left-radius: 4px;
+  	 color: black;
 }
 
 .input-group-btn-vertical {
@@ -56,7 +62,7 @@
 </script>
 <div class="form-group">
 	<div class="col-md-4 field-label">
-		<label for="wind_speed"><?php echo $number_spinner_label ?></label>
+		<label for="<?php echo $number_spinner_id ?>"><?php echo $number_spinner_label ?></label>
 	</div>
 	<div class="col-md-4">
 		<div id="<?php echo $number_spinner_id ?>-spinner" class="input-group spinner">
