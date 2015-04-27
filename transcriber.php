@@ -82,7 +82,12 @@ header.entry-header {
 	display: none;
 }
 </style>
+<!-- 
+<?php 
 
+
+?>
+ -->
 <script>
 
 <?php get_currentuserinfo();
@@ -174,13 +179,11 @@ var trans_user_firstname =	"<?php echo $current_user->user_firstname;?>
         var url = "/wp-content/uploads/2015/04/kestrel.jpg";
         var images = [];
         <?php
-global $wpdb;
-$query = 'select guid  from wp_posts inner join wp_postmeta on wp_posts.id=wp_postmeta.post_id where wp_postmeta.meta_key="be_kestrel_transcribe" and wp_postmeta.meta_value=1';
-$res = $wpdb->get_results($query);
 
-foreach ($res as $img) {
+
+foreach (get_transcribe_queue() as $img) {
 	
-	echo "images.push(\"".$img->guid."\");\n";
+	echo "images.push(\"".$img."\");\n";
 
 }
 ?>
@@ -190,9 +193,9 @@ foreach ($res as $img) {
            //   var url = "/wp-content/uploads/2015/04/kestrel" + (i + 1) + ".jpg";
               var url = images.pop();
               var id = "kestrel" + (i + 1) + "_sel";
-
+		      if (url) {
               $(v).html('<img id="' + id + '" class="kestrel-image" src="' + url + '"/><div>d ' + (i + 1) + '</div>');
-              
+		      }
               $(v).click(
                   function(e) {
                     $("#input-widget").hide();

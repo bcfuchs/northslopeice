@@ -169,41 +169,59 @@ function k_get_spinner($label, $id, $v) {
 add_filter( 'login_redirect', create_function( '$url,$query,$user', 'return home_url();' ), 10, 3 );
 
 // transcibe queue
+add_action('get_transcribe_queue','get_transcribe_queue',10,1);
 
 function get_transcribe_queue(){
+	error_log('get_transcribe_queue');
+	global $wpdb;
 	$max_transcriptions = 3;
 	// max_transcriptinos should be settable in options.
 	$out;
 	// get all the avail kestrels. 
-	// TODO
-	// but not for same user!! 
-	$q = "select * from wp_kestrel_readings";
-	$t =  Array(); 
+	$query1 = 'select guid  from wp_posts inner join wp_postmeta on wp_posts.id=wp_postmeta.post_id where wp_postmeta.meta_key="be_kestrel_transcribe" and wp_postmeta.meta_value=1';
+	$res = $wpdb->get_results($query1);
+	$avail;
+	error_log($res);
+	// exception no results; 
+	foreach ($res as $a ) {
+		$avail[] = $a->guid;	
+	} 
+	
+	
+	$read =  Array(); 
 	// list of readings by current user
-	$u; 
-	global $wpdb;
+	$out; 
+	
 	global $current_user;
 	get_currentuserinfo();
-	$res = $wpdb->get_results($q);
-	foreach ($res as $r) {
-	 if (! $t->{$r->image}) {
-		 $t->{$r->image} = 1;
-	 }
-	 else {
-	   $t->{$r->image}++;
-	 }
-	 if ($r->author = $current_user->user_ID) {
-	 	$u[] = $r->image;
-	 }
+	$q = "select * from wp_kestrel_readings";
+	$readings = $wpdb->get_results($q);
+	foreach ( $readings as $r ) {
+		$img = $r->image;
+		if (! $read [$img]) {
+			$read[$img]['count'] = 1;
+			$read[$img]['author'] = $r->author;
+		} else {
+			
+			$read[$img]['count'] ++;
+		}
+		
+	}
+	error_log(serialize($read));
+	foreach($avail as $img) {
+	
+		if ($read[$img]
+			 && $read[$img]['count'] < $max_transcriptions 
+			 && $read[$img]['author'] != $current_user->ID )
+		{
+			$out[] = $img;
+		}
+		if (!$read[$img]) {
+			$out[] = $img;
+		}
+		
 	}
 	
-	// Dont return if
-	// current user has done this one
-	// count is over two
-	
-
-
-
 	return $out;
 }
 
