@@ -108,7 +108,7 @@ function be_attachment_kestrel_transcribe( $form_fields, $post ) {
 	$checked = "";
 	// set to checked if value ==1 
 	if (get_post_meta( $post->ID, 'be_kestrel_transcribe', true )) 
-		$checked = "checked";
+	$checked = "checked";
 	$form_fields['be_kestrel_transcribe'] = array(
 			'label' => '<span style="color:red;" id="transcribe-invite">Transcribe this kestral</span>',
 			'input' => 'html',
@@ -123,7 +123,7 @@ function be_attachment_kestrel_transcribe( $form_fields, $post ) {
 	return $form_fields;
 }
 	
-add_filter( 'attachment_fields_to_edit', 'be_attachment_kestrel_transcribe', 10, 2 );
+add_filter( 'attachment_fields_to_edit', 'be_attachment_kestrel_transcribe', 15, 2 );
 
 /**
  * Save transcribe checkbx. 
@@ -157,6 +157,7 @@ function download_data() {
 
 add_action('k_get_spinner','k_get_spinner',10,3);
 function k_get_spinner($label, $id, $v) {
+		$a = get_kestrel_readings('http://arcticict.mobilecollective.co.uk/wp-content/uploads/2015/04/kestrel3.jpg');
 		error_log($label);
 		error_log($id);
 		set_query_var( 'number_spinner_label',$label);
@@ -166,4 +167,66 @@ function k_get_spinner($label, $id, $v) {
 }
 // redirect to home page
 add_filter( 'login_redirect', create_function( '$url,$query,$user', 'return home_url();' ), 10, 3 );
+
+// transcibe queue
+
+function get_transcribe_queue(){
+	$max_transcriptions = 3;
+	// max_transcriptinos should be settable in options.
+	$out;
+	// get all the avail kestrels. 
+	// TODO
+	// but not for same user!! 
+	$q = "select * from wp_kestrel_readings";
+	$t =  Array(); 
+	// list of readings by current user
+	$u; 
+	global $wpdb;
+	global $current_user;
+	get_currentuserinfo();
+	$res = $wpdb->get_results($q);
+	foreach ($res as $r) {
+	 if (! $t->{$r->image}) {
+		 $t->{$r->image} = 1;
+	 }
+	 else {
+	   $t->{$r->image}++;
+	 }
+	 if ($r->author = $current_user->user_ID) {
+	 	$u[] = $r->image;
+	 }
+	}
+	
+	// Dont return if
+	// current user has done this one
+	// count is over two
+	
+
+
+
+	return $out;
+}
+
+function k_reading_not_current_user($uri) {
+	
+	
+}
+// return the number of current readings for a uri
+
+function get_kestrel_readings($uri) {
+	error_log('get_kestrel_readings');
+	$q = "select count(id) from wp_kestrel_readings where image='".$uri."'";
+	global $wpdb;
+	$res = $wpdb->get_results($q);
+	$out = 0;
+	foreach ( $res as $r) {
+	
+	
+		$out = $r->{"count(id)"};
+	
+	}
+	return $out;
+}
+
+
 ?>

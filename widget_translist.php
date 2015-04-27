@@ -9,8 +9,7 @@ width: 100px;
 
 }
 </style>
-<h2>Kestrel list</h2>
-<p>Just a list to see what we've got</p>
+<h2>Transcribed Kestrels </h2>
 
 <?php
 /** widget to display a list of kestrels with info when it is available 
@@ -39,6 +38,7 @@ select * from wp_kestrel_readings where image=$imageurl;
 <td>Wind Direction</td>
 <td>Wind Speed</td>
 <td>Temperature</td>
+<td>Transcriber</td>
 </tr>
 <?php
 global $wpdb;
@@ -47,16 +47,19 @@ $res = $wpdb->get_results($query);
 // there will be more than two readings for a kestrel!
 
 foreach ($res as $img) {
+$author = $img->author;
+ $user_info = get_userdata( $author);
 $lat = stripslashes($img->lat);
 $lon = stripslashes($img->lon);
 $out = <<<END
 
-<tr>`
+<tr>
 <td  class="kestrel-image"><img src="$img->image"/></td>
 <td class="kestrel-location">$lat, $lon</td>
 <td class="kestrel-wd">$img->wind_direction</td>
 <td class="kestrel-ws">$img->wind_speed</td>
 <td class="kestrel-temp">$img->temperature</td>
+<td class="kestrel-author">$user_info->user_login</td>
 </tr>
 END;
 echo $out;
