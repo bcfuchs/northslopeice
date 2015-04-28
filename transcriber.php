@@ -7,7 +7,7 @@ Template Name: Transcriber
 <script src="<?php echo get_stylesheet_directory_uri(); ?>/js/exif.js"></script>
 <script src="<?php echo get_stylesheet_directory_uri(); ?>/js/geopoint.js"></script>
 <style>
-/*  override theme settings...*/
+/* hide the panels for this page...*/
 .content-left-wrap {
 	padding-top: 0 !important;
 }
@@ -26,10 +26,21 @@ header.entry-header {
 }
 
 #map-canvas {
-	height: 300px !important;
-	width: 300px !important;
+	height: 299px !important;
+	width: 280px !important;
+	z-index: 9999999;
 }
+#map-container-1 {
+/* 
+	position: absolute;
+	top: 30px;
+	left: 280px; 
+	*/
+	  margin-top: -39px;
+  	margin-left: 410px;
 
+
+}
 #plan { //
 	display: none;
 }
@@ -65,7 +76,7 @@ header.entry-header {
 	background: gray;
 	color: white;
 	top: 30px;
-	left: 480px;
+	left: 580px;
 	z-index: 99999;
 	height: 580px;
 	width: 530px;
@@ -85,27 +96,20 @@ header.entry-header {
 	display: none;
 }
 </style>
-<!-- 
-<?php 
 
-
-?>
- -->
 <script>
 
 <?php get_currentuserinfo();
 		global $current_user;?>
 
-		
-	
-	
-	
 var trans_user_login =	"<?php echo $current_user->user_login;?>";
 var trans_user_firstname =	"<?php echo $current_user->user_firstname;?>
   ";
 
   jQuery(document).ready(
       function($) {
+        var colors  = ["6EF569","FE75F9", "6E5F69", "BEF5F2","BEA2FA","E5F569"];
+        var colorCounter = 0;
         var make_kestrel_data_uri;	
         var data = [ [ 71.283, -156.790, "6EF569" ], [ 71.273, -156.761, "FE75F9" ], [ 71.253, -156.810, "6E5F69" ],
             [ 71.223, -156.851, "BEF5F2" ] ];
@@ -176,15 +180,20 @@ var trans_user_firstname =	"<?php echo $current_user->user_firstname;?>
 	          $("#kestrel-form-lat").val(lat[0] + "° "+ lat[1] +  "' "+lat[2]+"\" ");
 	          $("#kestrel-form-lon").val(lon[0] + "° "+ lon[1] + "' "+lon[2]+"\" ");
 	          console.log(str);
+	          
+	          var color = colors[colorCounter++];
+	          if (colorCounter >= colors.length -1 ) { colorCounter = 0 }
 	          var data = [
-	       //               [ 71.283, -156.990, "FE75F9" ]
-	                      [geo.getLatDec(), geo.getLonDec(), "6EF569"]
+	                      [geo.getLatDec(), geo.getLonDec(), color]
 	                     
 	                  ];
-	         	var e = $.Event('makeMap');
-		        $(document).trigger(e,{update:data});
+		// trigger the map via an event 
+		// this is just an update
+		// centre is set when map is made
+	          var e = $.Event('makeMap');
+		        $(document).trigger(e,{update:data,resize:true});
 	       
-	        }
+	        	}
 	       
 	        get_latlon(id,addLatLon);
 	        	
@@ -196,14 +205,13 @@ var trans_user_firstname =	"<?php echo $current_user->user_firstname;?>
         var url = "/wp-content/uploads/2015/04/kestrel.jpg";
         var images = [];
         <?php
-
-
-foreach (get_transcribe_queue() as $img) {
+		foreach (get_transcribe_queue() as $img) {	
+			// this way no need to worry about comma 
+			echo "images.push(\"".$img."\");\n";
 	
-	echo "images.push(\"".$img."\");\n";
-
-}
-?>
+		}
+	
+		?>
 
         $("#kestrel-row .col-md-1").each(
             function(i, v) {
@@ -226,6 +234,8 @@ foreach (get_transcribe_queue() as $img) {
                         '<img class="kestrel-image" src="' + url + '"/>');
                    
                     $("#input-widget").show();
+                    $("#map-container-1").show();
+                    
                     // show the map
 				
                   });
@@ -317,7 +327,9 @@ make_kestrel_data_uri();
 		<div class="col-md-8 panel transcribe-right">
 			<div id="map-container-1" style="display: none">
 				<?php get_template_part('widget_map')?>
+
 				<script>
+				// only call this when the kestrel button is clicked
 				jQuery(document).ready(function($){
 				  var data = [
 				//              [71.283, -156.790, "6EF569"],
@@ -331,6 +343,7 @@ make_kestrel_data_uri();
 				      mapTypeId : google.maps.MapTypeId.ROADMAP
 				    };
 				    window.ait.makeMap(data,props);
+				
 				});
 				
 				

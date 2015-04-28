@@ -85,12 +85,21 @@ Template Name: Widget-Map
 	        $(this).trigger(e,{update:moredata});
          //   addMarkers(moredata);
           });
+          /**
+          signal for updating data on map
+          */
+          
           var addsignal = "makeMap";
           $(document).on(addsignal, function (e,d) {
-            console.log(addsignal);
-            console.log("hi there napwid");
-            console.log(d);
-            addMarkers(d.update);
+          
+       
+           if (d.update) {
+            	addMarkers(d.update);
+           }
+            if (d.resize) {
+              
+              google.maps.event.trigger( map, 'resize' );
+            }
         });
           window.setTimeout(function() {
 
