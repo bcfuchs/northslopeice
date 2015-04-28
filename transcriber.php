@@ -58,16 +58,17 @@ header.entry-header {
 	margin-top: 150px;
 }
 
+
 #input-widget {
 	position: absolute;
 	padding: 5px 35px 5px 5px;
 	background: gray;
 	color: white;
-	top: 70px;
-	left: 780px;
+	top: 30px;
+	left: 480px;
 	z-index: 99999;
-	height: 480px;
-	width: 230px;
+	height: 580px;
+	width: 530px;
 	display: none;
 	border: 2px solid blue;
 	-webkit-border-radius: 5px;
@@ -75,8 +76,10 @@ header.entry-header {
 	border-radius: 5px;
 	border-color: #9ecaed;
 	box-shadow: 0 0 10px #9ecaed;
-	-webkit-transition: all 1s ease;
+	-webkit-transition: all 2s ease;
 }
+
+
 
 #comments {
 	display: none;
@@ -136,8 +139,22 @@ var trans_user_firstname =	"<?php echo $current_user->user_firstname;?>
               		lon = EXIF.getTag(img, "GPSLongitude");
               		console.log("lat = " + lat);
               		console.log("lon = "+ lon);
+              		var ch = [
+				"DateTimeOriginal",
+				"DateTimeDigitized",
+				"GPSLatitudeRef",
+				"GPSLongitudeRef",
+				"GPSDateStamp"
+				
+              		          ];
+              	console.log("hiya");	
+              	for (var i = 0; i < ch.length;i++) {
+              	  var name = ch[i];
+              	  console.log(name + ' : ' + EXIF.getTag(img,name));
+              	}
               		cb(lat,lon);
             	});
+           
            
 	         
         };
@@ -198,13 +215,11 @@ foreach (get_transcribe_queue() as $img) {
 		      }
               $(v).click(
                   function(e) {
-                    $("#input-widget").hide();
-                    /*      $(".kestrel-image").css({
-                    "display" : "inline"
-                    }); */
-                    
-                    
-                    $(this).find("img").hide();
+                 // hide widget
+                 
+                    $("#input-widget").hide();                                                        
+                   // $(this).find("img").hide();
+                    $("body").data("img",  $(this).find("img"));
                     set_latlon_info(id);
                     $("#kestrel-form-img").attr('value', $(this).find("img").attr('src'));
                     $("#input-widget-image").html(
@@ -224,6 +239,7 @@ foreach (get_transcribe_queue() as $img) {
   					console.log(response);
   					make_kestrel_data_uri();
   					$("#input-widget").hide();
+  					 $("body").data("img").hide();
   					$("#total-kestrels-tr").html(
   						parseInt($("#total-kestrels-tr").html())+1
   					);

@@ -73,13 +73,13 @@ function kestrel_insert_reading($wd,$ws,$temp,$lat,$lon,$img) {
 	
 
 }
-
+/**
+ * Save data from a kestrel transcription
+ */
 add_action( 'wp_ajax_save_kestrel_data', 'save_kestrel_data' );
 
 function save_kestrel_data() {
 	error_log('save_kestrel_data');
-	error_log(serialize($_POST));
-	error_log(serialize($_GET));
 	$lat = $_POST['lat'];
 	$lon = $_POST['lon'];
 	$img = $_POST['img'];
@@ -103,6 +103,7 @@ function save_kestrel_data() {
 * 	where wp_postmeta.meta_key="be_kestrel_transcribe" and wp_postmeta.meta_value=1;
 *  
  */
+add_filter( 'attachment_fields_to_edit', 'be_attachment_kestrel_transcribe', 15, 2 );
 
 function be_attachment_kestrel_transcribe( $form_fields, $post ) {
 	$checked = "";
@@ -122,24 +123,26 @@ function be_attachment_kestrel_transcribe( $form_fields, $post ) {
 
 	return $form_fields;
 }
-	
-add_filter( 'attachment_fields_to_edit', 'be_attachment_kestrel_transcribe', 15, 2 );
 
 /**
- * Save transcribe checkbx. 
-*/
+ * Save transcribe checkbox.
+ */	
 
+add_filter( 'attachment_fields_to_save', 'be_attachment_kestrel_transcribe_save', 10, 2 );
 function be_attachment_kestrel_transcribe_save($post, $attachment ) {
 
 	if( isset( $attachment['be_kestrel_transcribe'] ) )
 		
 		update_post_meta( $post['ID'], 'be_kestrel_transcribe', $attachment['be_kestrel_transcribe'] );
+	else 
+		update_post_meta( $post['ID'], 'be_kestrel_transcribe', 0 );
 	
 	return $post;
 }
 
-add_filter( 'attachment_fields_to_save', 'be_attachment_kestrel_transcribe_save', 10, 2 );
-
+/**
+ * Create a json download for kestrel data
+ */
 
 add_action( 'wp_ajax_download_data', 'download_data' );
 
@@ -154,12 +157,12 @@ function download_data() {
 	echo stripslashes(json_encode($out));
 	wp_die();
 }
-
+/**
+ * Html for a number spinner form field
+ */
 add_action('k_get_spinner','k_get_spinner',10,3);
+
 function k_get_spinner($label, $id, $v) {
-		$a = get_kestrel_readings('http://arcticict.mobilecollective.co.uk/wp-content/uploads/2015/04/kestrel3.jpg');
-		error_log($label);
-		error_log($id);
 		set_query_var( 'number_spinner_label',$label);
 		set_query_var( 'number_spinner_id',$id);
 		set_query_var( 'number_spinner_default_value',$v);
@@ -168,21 +171,24 @@ function k_get_spinner($label, $id, $v) {
 // redirect to home page
 add_filter( 'login_redirect', create_function( '$url,$query,$user', 'return home_url();' ), 10, 3 );
 
-// transcibe queue
+/**
+ * Get a queue of images needing transcription
+ */
 add_action('get_transcribe_queue','get_transcribe_queue',10,1);
 
 function get_transcribe_queue(){
-	error_log('get_transcribe_queue');
+
 	global $wpdb;
+	// number of transcriptions to make for each kestrel. 
 	$max_transcriptions = 3;
-	// max_transcriptinos should be settable in options.
+	
 	$out;
-	// get all the avail kestrels. 
+	// get all the  kestrel images marked for transcription  
 	$query1 = 'select guid  from wp_posts inner join wp_postmeta on wp_posts.id=wp_postmeta.post_id where wp_postmeta.meta_key="be_kestrel_transcribe" and wp_postmeta.meta_value=1';
 	$res = $wpdb->get_results($query1);
 	$avail;
-	error_log($res);
-	// exception no results; 
+
+	//TODO exception no results; 
 	foreach ($res as $a ) {
 		$avail[] = $a->guid;	
 	} 
@@ -229,7 +235,9 @@ function k_reading_not_current_user($uri) {
 	
 	
 }
-// return the number of current readings for a uri
+/**
+* return the number of current readings for a uri
+*/
 
 function get_kestrel_readings($uri) {
 	error_log('get_kestrel_readings');

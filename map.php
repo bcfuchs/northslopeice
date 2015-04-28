@@ -10,6 +10,9 @@ Template Name: Map
 display:none;
 
 }
+.gmnoprint img {
+    max-width: none; 
+}
 #comments {
 display: none;
 
@@ -35,7 +38,7 @@ display: none;
  // width: 100%;
 }
 </style>
-<?php get_template_part('widget_translist');?>
+
 <div id="map-header" style="display:inline">
 <h2 style="display:inline">Data Points...</h2>
 <button id="adddata" class="btn btn-primary" style="display:inline;">Update data</button>
@@ -50,7 +53,7 @@ jQuery(document).ready(function($){
               [71.223, -156.851, "BEF5F2"]
           ];
   var mapProp = {
-      center : new google.maps.LatLng(71.275044, -155.2818778),
+      center : new google.maps.LatLng(71.275044, -156.657915),
       zoom : 10,
       mapTypeId : google.maps.MapTypeId.ROADMAP
     };

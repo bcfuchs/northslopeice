@@ -6,6 +6,7 @@ called from transcriber.php js
 */
 ?>
 <div id="input-widget">
+	
 	<div id="input-widget-image"></div>
 	<div id="input-widget-info"></div>
 	<div id="input-widget-form">
