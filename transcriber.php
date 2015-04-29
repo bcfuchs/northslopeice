@@ -26,6 +26,7 @@ header.entry-header {
 }
 
 #map-canvas {
+
 	height: 299px !important;
 	width: 280px !important;
 	z-index: 9999999;
@@ -331,19 +332,14 @@ make_kestrel_data_uri();
 				<script>
 				// only call this when the kestrel button is clicked
 				jQuery(document).ready(function($){
-				  var data = [
-				//              [71.283, -156.790, "6EF569"],
-				//              [71.273, -156.761, "FE75F9"],
-				//              [71.253, -156.810, "6E5F69"],
-				//              [71.223, -156.851, "BEF5F2"]
-				          ];
+				  var data = [				          ];
+				  var center = new google.maps.LatLng(71.778044, -156.289);
 				  var props = {
-				      center : new google.maps.LatLng(71.778044, -156.289),
+				      center : center,
 				      zoom : 7,
 				      mapTypeId : google.maps.MapTypeId.ROADMAP
 				    };
-				    window.ait.makeMap(data,props);
-				
+				   window.ait.makeMap(data,props);
 				});
 				
 				
