@@ -157,7 +157,11 @@ var trans_user_firstname =	"<?php echo $current_user->user_firstname;?>
               	  var name = ch[i];
               	  console.log(name + ' : ' + EXIF.getTag(img,name));
               	}
-              		cb(lat,lon);
+              	date = "";
+              	if (EXIF.getTag(img,"DateTimeOriginal")) {
+              	  date = EXIF.getTag(img,"DateTimeOriginal") 
+              	}
+              		cb(lat,lon,date);
             	});
            
            
@@ -166,7 +170,7 @@ var trans_user_firstname =	"<?php echo $current_user->user_firstname;?>
 	    var set_latlon_info = function(id) {
 		      
 		    
-	       var addLatLon = function(lat,lon) {
+	       var addLatLon = function(lat,lon,date) {
 	          console.log(typeof(lat));
 	          console.log("alat = " + lat);
         		console.log("a	lon = "+ lon);

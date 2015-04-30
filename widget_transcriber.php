@@ -17,6 +17,7 @@ called from transcriber.php js
 				value="save_kestrel_data" /> 
 			<input id="kestrel-form-lat" type="hidden" name="lat" /> 
 			<input id="kestrel-form-lon"	type="hidden" name="lon" /> 
+			<input id="kestrel-form-date"	type="hidden" name="date" /> 
 				 
 			
 
