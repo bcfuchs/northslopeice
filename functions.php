@@ -49,7 +49,7 @@ function test_kestrel_table() {
 	
 }
 
-function kestrel_insert_reading($wd,$ws,$temp,$lat,$lon,$img) {
+function kestrel_insert_reading($wd,$ws,$temp,$lat,$lon,$img, $dateOrig) {
 	global $wpdb;
 	$table_name = $wpdb->prefix .'kestrel_readings';
 	$wpdb->insert(
@@ -86,9 +86,10 @@ function save_kestrel_data() {
 	$temp = $_POST['temp'];
 	$wd = $_POST['wind_direction'];
 	$ws = $_POST['wind_speed'];
+	$dateOrig = $_POST['date_orig'];
 	error_log($img);
 	// TODO exception --fail!
-	kestrel_insert_reading($wd,$ws,$temp,$lat,$lon,$img);
+	kestrel_insert_reading($wd,$ws,$temp,$lat,$lon,$img,$dateOrig);
 	
 
 	wp_die(); // this is required to terminate immediately and return a proper response
