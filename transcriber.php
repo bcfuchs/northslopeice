@@ -62,8 +62,8 @@ header.entry-header {
 }
 
 #input-widget .kestrel-image {
-	padding: 10px; //
-	width: 30px;
+	padding: 10px; 
+	width: 250px;
 }
 
 #kcont {
@@ -114,7 +114,18 @@ var trans_user_firstname =	"<?php echo $current_user->user_firstname;?>
         var make_kestrel_data_uri;	
         var data = [ [ 71.283, -156.790, "6EF569" ], [ 71.273, -156.761, "FE75F9" ], [ 71.253, -156.810, "6E5F69" ],
             [ 71.223, -156.851, "BEF5F2" ] ];
+        var makeMap = function(lat,lon){
+          
+      	 	   var data = [];
+				  var center = new google.maps.LatLng(lat,lon);
+				  var props = {
+				      center : center,
+				      zoom : 9,
+				      mapTypeId : google.maps.MapTypeId.ROADMAP
+				    };
+				   window.ait.makeMap(data,props);  
         
+        }
         var post_kestrel_data = function(success,error) {
       		
     		data = $("#kestrel-form").serialize();
@@ -132,12 +143,36 @@ var trans_user_firstname =	"<?php echo $current_user->user_firstname;?>
     			});
         };
      
+   
+        var parseDMS = function(dms) {
+        
+            // and convert to decimal degrees...
+            var deg;
+            switch (dms.length) {
+                case 3:  // interpret 3-part result as d/m/s
+                    deg = dms[0]/1 + dms[1]/60 + dms[2]/3600;
+                    break;
+                case 2:  // interpret 2-part result as d/m
+                    deg = dms[0]/1 + dms[1]/60;
+                    break;
+                case 1:  // just d (possibly decimal) or non-separated dddmmss
+                    deg = dms[0];
+                    // check for fixed-width unseparated format eg 0033709W
+                    //if (/[NS]/i.test(dmsStr)) deg = '0' + deg;  // - normalise N/S to 3-digit degrees
+                    //if (/[0-9]{7}/.test(deg)) deg = deg.slice(0,3)/1 + deg.slice(3,5)/60 + deg.slice(5)/3600;
+                    break;
+                default:
+                    return NaN;
+            }
+      //      if (/^-|[WS]$/i.test(dmsStr.trim())) deg = -deg; // take '-', west and south as -ve
 
+            return Number(deg);
+        };
         var get_latlon = function(id,cb) {
          console.log(id);
            var lat,lon;
            var img = document.getElementById(id);
-          
+        
            EXIF.getData(img, function() {
              		console.log(img);
               		lat = EXIF.getTag(img, "GPSLatitude");
@@ -146,12 +181,21 @@ var trans_user_firstname =	"<?php echo $current_user->user_firstname;?>
               		console.log("lon = "+ lon);
               		var ch = [
 				"DateTimeOriginal",
+				"GPSLatitude",
 				"DateTimeDigitized",
 				"GPSLatitudeRef",
 				"GPSLongitudeRef",
-				"GPSDateStamp"
+				"GPSDateStamp",
+				"DateTime",
+				"GPSDateStamp",
+				"SubsecTime",
+				"SubsecTimeOriginal",
+				"SubsecTimeDigitized",
+				'dateCreated'
 				
               		          ];
+              	console.log(img.exifdata);
+                  console.log("---");
               	console.log("hiya");	
               	for (var i = 0; i < ch.length;i++) {
               	  var name = ch[i];
@@ -167,6 +211,10 @@ var trans_user_firstname =	"<?php echo $current_user->user_firstname;?>
            
 	         
         };
+        var toPrec = function(n,places) {
+          var f = Math.pow(10,places);
+          return Math.round(n * f) / f;
+        }
 	    var set_latlon_info = function(id) {
 		      
 		    
@@ -176,22 +224,22 @@ var trans_user_firstname =	"<?php echo $current_user->user_firstname;?>
         		console.log("a	lon = "+ lon);
         		
 	          /// TODO get the negative from the orientation 
-	          
-	          var str = lat[0] + "° "+ lat[1] + "'"+lat[2] + "\","+ " -"+ lon[0] + "° "+ lon[1] + "' "+lon[2]+"\" ";
-	          var geo =  new GeoPoint("-" + lon[0] + "° "+ lon[1] + "' "+lon[2] + "\"", lat[0] + "° "+ lat[1] + "' "+lat[2]+"\" ");
-	          console.log(geo.getLatDec());
-	          console.log(lon[0] + "° "+ lon[1] + "' "+lon[2]+"\" ");
-	          $("#input-widget-info").html(geo.getLatDec().toFixed(3) + "," + geo.getLonDec().toFixed(3));
-	          $("#kestrel-form-lat").val(lat[0] + "° "+ lat[1] +  "' "+lat[2]+"\" ");
-	          $("#kestrel-form-lon").val(lon[0] + "° "+ lon[1] + "' "+lon[2]+"\" ");
-	          console.log(str);
+	         	var newLat = parseDMS(lat);
+	         	var newLon = -1 * parseDMS(lon);
+	         	newLat = toPrec(newLat,4);
+	         	newLon = toPrec(newLon,4);
+	          $("#input-widget-info").html(newLat + "," + newLon);
+	          $("#kestrel-form-lat").val(newLat);
+	          $("#kestrel-form-lon").val(newLon);
+	          console.log(newLat + ", " + newLon);
 	          
 	          var color = colors[colorCounter++];
 	          if (colorCounter >= colors.length -1 ) { colorCounter = 0 }
 	          var data = [
-	                      [geo.getLatDec(), geo.getLonDec(), color]
+	                      [newLat, newLon, color]
 	                     
 	                  ];
+	         makeMap(newLat,newLon);
 		// trigger the map via an event 
 		// this is just an update
 		// centre is set when map is made
@@ -333,21 +381,7 @@ make_kestrel_data_uri();
 			<div id="map-container-1" style="display: none">
 				<?php get_template_part('widget_map')?>
 
-				<script>
-				// only call this when the kestrel button is clicked
-				jQuery(document).ready(function($){
-				  var data = [				          ];
-				  var center = new google.maps.LatLng(71.778044, -156.289);
-				  var props = {
-				      center : center,
-				      zoom : 7,
-				      mapTypeId : google.maps.MapTypeId.ROADMAP
-				    };
-				   window.ait.makeMap(data,props);
-				});
-				
-				
-				</script>
+			
 			</div>
 		</div>
 	</div>
