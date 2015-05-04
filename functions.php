@@ -218,6 +218,8 @@ function k_get_spinner($label, $id, $v) {
 // redirect to home page
 add_filter( 'login_redirect', create_function( '$url,$query,$user', 'return home_url();' ), 10, 3 );
 
+
+
 /**
  * Get a queue of images needing transcription
  */

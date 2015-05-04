@@ -195,7 +195,7 @@ var trans_user_firstname =	"<?php echo $current_user->user_firstname;?>
 				
               		          ];
               	console.log(img.exifdata);
-                  console.log("---");
+                console.log("---");
               	console.log("hiya");	
               	for (var i = 0; i < ch.length;i++) {
               	  var name = ch[i];

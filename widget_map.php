@@ -50,7 +50,8 @@ Template Name: Widget-Map
           };
          
           var map = new google.maps.Map(document.getElementById("map-canvas"), props);
-          var addMarker = function(lat, lon, color) {
+          $(document).data('map',map);
+          var addMarker = function(lat, lon, color,cb) {
             var position = new google.maps.LatLng(lat, lon);
             var icon = getIcon(color);
             var marker = new google.maps.Marker({
@@ -59,32 +60,52 @@ Template Name: Widget-Map
               position : position,
               animation : google.maps.Animation.DROP
             });
+            google.maps.event.addListener(marker, 'click', function() {
+             // reset the last one clicked 
+              if ($(document).data('last_clicked_marker')) {
+                $(document).data('last_clicked_marker').setIcon( $(document).data('last_clicked_marker_icon'));
+              }
+         	// store the marker and its icon so we can reset...
+              
+         	  
+              (function(marker){
+                $(document).data('last_clicked_marker',marker);
+              	$(document).data('last_clicked_marker_icon',marker.icon.url);
+	            console.log("sotre icon");
+              	console.log(marker.icon.url);
+              })(marker);
+              // use red as the focus icon
+              marker.setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png')	
+          	  console.log(marker.icon);
+          	  cb();
+            });
+            $(document).data('last_marker',marker);
             marker.setMap(map);
           };
+          
           // need to call this several times...
           var addMarkers = function(markers) {
             $.each(markers, function(i, v) {
               window.setTimeout(function() {
-                addMarker(v[0], v[1], v[2]);
+                // onclick callback
+                var cb; 
+                if (v[3]) {
+               				 cb = v[3];
+                }
+                else {
+                  cb = function(){}
+                }
+         
+                addMarker(v[0], v[1], v[2],cb);
               }, i * 400);
+              
             });
+           
+            
             console.log('adding markers');
 
           };
 
-          var moredata = [
-
-          [ 71.283, -156.990, "FE75F9" ], [ 71.273, -156.961, "6EF569" ], [ 71.263, -156.910, "BEF5F2" ],
-              [ 71.213, -156.951, "6E5F69" ]
-
-          ];
-
-          $("#adddata").click(function() {
-         
-           	var e = $.Event('makeMap');
-	        $(this).trigger(e,{update:moredata});
-         //   addMarkers(moredata);
-          });
           /**
           signal for updating data on map
           */
