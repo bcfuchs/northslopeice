@@ -142,6 +142,52 @@ function be_attachment_kestrel_transcribe_save($post, $attachment ) {
 }
 
 /**
+ * Add ice photo upload
+ * http://code.tutsplus.com/articles/creating-custom-fields-for-attachments-in-wordpress--net-13076
+ *
+ * To get the urls do a join between postmeta and posts;
+ * select guid from wp_posts inner join wp_postmeta on wp_posts.id=wp_postmeta.post_id
+ * 	where wp_postmeta.meta_key="be_kestrel_transcribe" and wp_postmeta.meta_value=1;
+ *
+ */
+add_filter( 'attachment_fields_to_edit', 'be_attachment_ice_photo', 15, 2 );
+
+function be_attachment_ice_photo( $form_fields, $post ) {
+	$checked = "";
+	// set to checked if value ==1
+	if (get_post_meta( $post->ID, 'be_ice_photo', true ))
+		$checked = "checked";
+	$form_fields['be_ice_photo'] = array(
+			'label' => '<span style="color:red;" id="ice-invite">Ice photo</span>',
+			'input' => 'html',
+			'value' => get_post_meta( $post->ID, 'be_ice_photo', true ),
+			'helps' => 'check if this is an ice photo',
+			'html'=>"<input type='checkbox' value='1' $checked
+			name='attachments[{$post->ID}][be_ice_photo]'
+			id='attachments[{$post->ID}]' />"
+	);
+
+
+	return $form_fields;
+}
+
+/**
+	* Save ice_photo checkbox.
+	 */
+
+	 add_filter( 'attachment_fields_to_save', 'be_attachment_ice_photo_save', 10, 2 );
+	 function be_attachment_ice_photo_save($post, $attachment ) {
+
+	 if( isset( $attachment['be_ice_photo'] ) )
+
+	 	update_post_meta( $post['ID'], 'be_ice_photo', $attachment['be_ice_photo'] );
+	 	else
+	 		update_post_meta( $post['ID'], 'be_ice_photo', 0 );
+
+	 	return $post;
+}
+
+/**
  * Create a json download for kestrel data
  */
 
