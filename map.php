@@ -51,7 +51,7 @@ body {
 }
 </style>
 <div id="map-header" style="display: inline">
-	<h2 style="display: inline">Data Points...</h2>
+	<h2 style="display: inline;padding-left:10px;">Data Points...click on a point to see its image.</h2>
 	<button id="adddata" class="btn btn-primary" style="display: none;">Update data</button>
 </div>
 <div class="container">
@@ -70,7 +70,12 @@ body {
 // update data function
 !function() {
   jQuery(document).ready(function($){
-    
+    /**
+    * Refactor:
+    * move to widget_map
+    * Button with class "more_data" will populate map with 
+    *  with data supplied in attribute data-nsi-mapdata. 
+    */
     var moredata = [
 
         [ 71.283, -156.990, "FE75F9" ], [ 71.273, -156.961, "6EF569" ], [ 71.263, -156.910, "BEF5F2" ],
