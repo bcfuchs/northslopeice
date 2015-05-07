@@ -197,10 +197,23 @@ function download_data() {
 	error_log('download_data');
 	global $wpdb;
 	$results = $wpdb->get_results( 'SELECT * FROM wp_kestrel_readings', OBJECT );
-	$out = array();
+	
+	$kestrels = array();
+	$icers = array();
 	foreach ($results as $r) {
-		$out[] = $r;
+		$kestrels[] = $r;
 	}
+	$query2 = 'select guid  from wp_posts inner join wp_postmeta on wp_posts.id=wp_postmeta.post_id where wp_postmeta.meta_key="be_ice_photo" and wp_postmeta.meta_value=1';
+	$ice = $wpdb->get_results($query2);
+	foreach ($ice as $i) {
+		$lat  = 0;
+		$lon = 0;
+		$icers[] = array("photo"=>$i->guid,
+						"latitude"=>$lat,
+						"longitude"=>$lon);
+		
+	}
+	$out = array("kestrel_readings"=>$kestrels,"ice_photos"=>$icers);
 	echo stripslashes(json_encode($out));
 	wp_die();
 }
