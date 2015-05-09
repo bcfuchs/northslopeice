@@ -275,7 +275,7 @@ function get_transcribe_queue(){
 		}
 		
 	}
-	error_log(serialize($read));
+
 	foreach($avail as $img) {
 	
 		if ($read[$img]
@@ -293,10 +293,7 @@ function get_transcribe_queue(){
 	return $out;
 }
 
-function k_reading_not_current_user($uri) {
-	
-	
-}
+
 /**
 * return the number of current readings for a uri
 */
